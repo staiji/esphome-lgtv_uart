@@ -1,4 +1,5 @@
 #LGTV UART component for ESPHome
+
 ESPHome custom component for DIY LGTV controller using RS232 interface
 
 ### Hardware
