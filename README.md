@@ -1,5 +1,6 @@
-# esphome-lgtv_uart
-LGTV UART control component for ESPHome
+#LGTV UART component for ESPHome
+ESPHome custom component for DIY LGTV controller using RS232 interface
+
 ### Hardware
 - Wemos D1 MINI
 - MAX3232
