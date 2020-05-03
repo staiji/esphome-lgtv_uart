@@ -1,0 +1,130 @@
+substitutions:
+  devicename: lgtv
+  upper_devicename: LGTV
+
+esphome:
+  name: $devicename
+  platform: ESP8266
+  board: d1_mini
+  includes:
+    - lgtv_uart.h
+
+wifi:
+  ssid: !secret router_ssid
+  password: !secret router_password
+  fast_connect: true
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+interval:
+  - interval: 10s
+    then:
+      - uart.write: "ka 00 ff\r"
+
+uart:
+  id: uart_bus
+  baud_rate: 9600
+  tx_pin: D3
+  rx_pin: D4
+    
+binary_sensor:
+  - platform: custom
+    lambda: |-
+      auto lgtv_uart = new LGTVUARTComponent(id(uart_bus));
+      App.register_component(lgtv_uart);
+      return {lgtv_uart};
+    binary_sensors:
+      name: "${upper_devicename} Power state"
+      id: power
+
+switch:
+  - platform: template
+    name: "${upper_devicename}"
+    icon: mdi:television
+    lambda: |-
+      return id(power).state;
+    turn_on_action:
+      - switch.turn_on: tvon_switch
+    turn_off_action:
+      - switch.turn_on: tvoff_switch
+  - platform: uart
+    name: "${upper_devicename} Off"
+    id: tvoff_switch
+    data: "ka 00 00\r"
+    icon: mdi:television-off
+  - platform: uart
+    name: "${upper_devicename} On"
+    id: tvon_switch
+    data: "ka 00 01\r"
+    icon: mdi:television
+  - platform: uart
+    name: "${upper_devicename} Mute"
+    data: "ke 00 00\r"
+    icon: mdi:volume-off
+  - platform: uart
+    name: "${upper_devicename} Unmute"
+    icon: mdi:volume-high
+    data: "ke 00 01\r"
+  - platform: uart
+    name: "${upper_devicename} DTV"
+    data: "xb 00 01\r"
+  - platform: uart
+    name: "${upper_devicename} HDMI"
+    data: "xb 00 90\r"
+    icon: mdi:video-input-hdmi
+  - platform: uart
+    name: "${upper_devicename} SBS"
+    data: "ma 00 00 00 06 00 01 26\r"
+  - platform: uart
+    name: "${upper_devicename} KBS2"
+    data: "ma 00 00 00 07 00 01 26\r"
+  - platform: uart
+    name: "${upper_devicename} KBS1"
+    data: "ma 00 00 00 09 00 01 26\r"
+  - platform: uart
+    name: "${upper_devicename} MBC"
+    data: "ma 00 00 00 0b 00 01 26\r"
+  - platform: uart
+    name: "${upper_devicename} EBS1"
+    data: "ma 00 00 00 0a 00 01 26\r"
+  - platform: uart
+    name: "${upper_devicename} EBS2"
+    data: "ma 00 00 00 0a 00 02 26\r"
+  - platform: uart
+    name: "${upper_devicename} Vol5"
+    data: "kf 00 05\r"
+    icon: mdi:volume-low
+  - platform: uart
+    name: "${upper_devicename} Vol10"
+    data: "kf 00 0a\r"
+    icon: mdi:volume-medium
+  - platform: uart
+    name: "${upper_devicename} Vol15"
+    data: "kf 00 0f\r"
+    icon: mdi:volume-high
+  - platform: uart
+    name: "${upper_devicename} OK"
+    data: "mc 00 44\r"
+    icon: mdi:check-circle
+  - platform: uart
+    name: "${upper_devicename} Vol Up"
+    data: "mc 00 02\r"
+    icon: mdi:volume-plus
+  - platform: uart
+    name: "${upper_devicename} Vol Down"
+    data: "mc 00 03\r"
+    icon: mdi:volume-minus
+  - platform: uart
+    name: "${upper_devicename} CH Up"
+    data: "mc 00 00\r"
+    icon: mdi:chevron-up
+  - platform: uart
+    name: "${upper_devicename} CH Down"
+    data: "mc 00 01\r"
+    icon: mdi:chevron-down
