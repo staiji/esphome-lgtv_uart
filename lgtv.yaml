@@ -75,8 +75,20 @@ switch:
     name: "${upper_devicename} DTV"
     data: "xb 00 01\r"
   - platform: uart
-    name: "${upper_devicename} HDMI"
+    name: "${upper_devicename} HDMI1"
     data: "xb 00 90\r"
+    icon: mdi:video-input-hdmi
+  - platform: uart
+    name: "${upper_devicename} HDMI2"
+    data: "xb 00 91\r"
+    icon: mdi:video-input-hdmi
+  - platform: uart
+    name: "${upper_devicename} HDMI3"
+    data: "xb 00 92\r"
+    icon: mdi:video-input-hdmi
+  - platform: uart
+    name: "${upper_devicename} HDMI4"
+    data: "xb 00 93\r"
     icon: mdi:video-input-hdmi
   - platform: uart
     name: "${upper_devicename} SBS"
